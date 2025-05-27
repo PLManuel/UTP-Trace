@@ -1,0 +1,106 @@
+<form id="loginForm" class="mt-4 grid grid-cols-1 gap-5">
+  <fieldset>
+    <label for="correo">Correo</label>
+    <input
+      name="correo"
+      type="email"
+      placeholder="Ingresa tu correo electrónico"
+      required
+    />
+  </fieldset>
+
+  <fieldset>
+    <label for="contraseña">Contraseña</label>
+    <input
+      name="contraseña"
+      type="password"
+      placeholder="Ingresa tu contraseña"
+      required
+      minlength="8"
+    />
+  </fieldset>
+
+  <button
+    type="submit"
+    class="bg-violet-700 hover:bg-violet-900 transition duration-300 mt-4 text-white rounded-lg mx-5 py-2 block cursor-pointer"
+  >
+    Iniciar Sesión
+  </button>
+</form>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const loginForm = document.getElementById("loginForm") as HTMLFormElement
+    const submitButton = loginForm?.querySelector('button[type="submit"]')
+
+    if (!loginForm || !submitButton) {
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault()
+      const formData = new FormData(loginForm)
+      const data = Object.fromEntries(formData.entries())
+
+      const correo = data.correo?.toString().trim()
+      const contraseña = data.contraseña?.toString()
+
+      if (!emailRegex.test(correo)) {
+        alert("Correo electrónico inválido")
+        return
+      }
+
+      if (contraseña.length < 8) {
+        alert("La contraseña debe tener al menos 8 caracteres")
+        return
+      }
+
+      submitButton.setAttribute("disabled", "true")
+      submitButton.classList.add("opacity-50", "cursor-not-allowed")
+      submitButton.textContent = "Iniciando sesión..."
+
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ correo, contraseña }),
+        })
+
+        if (!response.ok) {
+          const error = await response.json()
+          throw new Error(error.error || "Error en el inicio de sesión")
+        }
+
+        const result = await response.json()
+        window.location.href = result.redirectTo
+      } catch (error) {
+        if (error instanceof Error) {
+          alert(error.message)
+        } else {
+          alert("Error desconocido")
+        }
+      } finally {
+        submitButton.removeAttribute("disabled")
+        submitButton.classList.remove("opacity-50", "cursor-not-allowed")
+        submitButton.textContent = "Iniciar Sesión"
+      }
+    })
+  })
+</script>
+
+<style>
+  @reference "../styles/global.css";
+
+  fieldset {
+    @apply flex flex-col;
+
+    > label {
+      @apply font-semibold ml-1 mb-0.5;
+    }
+    > input {
+      @apply border rounded-lg py-2 px-1 w-full placeholder:pl-1;
+    }
+  }
+</style>

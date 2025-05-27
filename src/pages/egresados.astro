@@ -1,0 +1,15 @@
+---
+import RegisterGraduates from "../components/RegisterGraduates"
+import GraduatesList from "../components/GraduatesList"
+import Layout from "../layouts/Layout.astro"
+---
+
+<Layout title="">
+  <div class="">
+    <div class="flex justify-between mb-5">
+      <h2>Lista de egresados</h2>
+      <RegisterGraduates client:load />
+    </div>
+    <GraduatesList client:load />
+  </div>
+</Layout>
