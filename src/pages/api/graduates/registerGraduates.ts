@@ -21,6 +21,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         nombre: data.nombre,
         apellido: data.apellido,
         email: data.email,
+        contraseña: data.password,
         carrera: data.carrera,
         fechaNacimiento: data.fechaNacimiento,
         fechaIngreso: data.fechaIngreso,

@@ -1,0 +1,14 @@
+---
+import GraduateConfigForm from "../../components/GraduateConfigForm"
+import Layout from "../../layouts/Layout.astro"
+
+const userInfoCookie = Astro.cookies.get("userInfo")?.value
+
+//@ts-ignore
+const userInfo = JSON.parse(decodeURIComponent(userInfoCookie))
+const userId = userInfo.id
+---
+
+<Layout title="">
+  <GraduateConfigForm client:load idGraduate={userId} />
+</Layout>

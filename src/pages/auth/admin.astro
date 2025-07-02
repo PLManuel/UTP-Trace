@@ -1,0 +1,48 @@
+---
+import logo from "../../assets/logo.svg"
+import adminLogin from "../../assets/admin-login.png"
+import LoginForm from "../../components/LoginForm.astro"
+import LayoutAuth from "../../layouts/LayoutAuth.astro"
+---
+
+<LayoutAuth title="Ingresa al sistema como administrador">
+  <div class="min-h-dvh flex items-center justify-center">
+    <div
+      class="w-full max-w-4xl rounded-xl overflow-hidden grid grid-cols-2 shadow-2xl relative"
+    >
+      <a href="/auth" class="absolute top-3 left-3 text-sm inline-flex items-center text-neutral-700 hover:text-red-400 transition">
+        <svg
+        class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          ><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path
+            d="M5 12l14 0"></path><path d="M5 12l4 4"></path><path
+            d="M5 12l4 -4"></path></svg
+        >
+        Volver
+      </a>
+      <section class="bg-white px-10 py-8">
+        <img
+          src={logo.src}
+          alt="Logotipo de UTP+trace"
+          class="w-auto mx-auto mb-4 h-8"
+          transition:name="logo-utp-trace"
+        />
+        <h2 class="font-bold text-center">¡Bienvenido👋!</h2>
+        <p class="text-center text-neutral-800 mb-3">
+          Ingresa tus datos para <strong>iniciar sesión.</strong>
+        </p>
+        <LoginForm userType="ADMINISTRATOR" />
+      </section>
+      <div
+        class="flex justify-center items-center bg-gradient-to-tl to-red-500 from-red-800"
+      >
+        <img src={adminLogin.src} class="drop-shadow-2xl" alt="" />
+      </div>
+    </div>
+  </div>
+</LayoutAuth>

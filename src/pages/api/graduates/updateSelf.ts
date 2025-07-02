@@ -47,6 +47,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     const updated = await response.json()
+
     return new Response(JSON.stringify(updated), {
       status: 200,
       headers: {

@@ -1,8 +1,8 @@
 ---
-import Sidebar from "../../components/Sidebar.astro"
+import UsersList from "../../components/UsersList"
 import Layout from "../../layouts/Layout.astro"
-export const prerender = false
 ---
 
 <Layout title="">
+  <UsersList client:load />
 </Layout>

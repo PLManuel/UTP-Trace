@@ -12,12 +12,13 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-
-  redirects: {
-    "/": "/login",
+  server: {
+    port: 4323,
   },
-
-  adapter: vercel(),
+  redirects: {
+    "/": "/auth",
+  },
   output: "server",
+  adapter: vercel(),
   integrations: [react()],
 })

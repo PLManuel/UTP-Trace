@@ -12,47 +12,38 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const data = await request.json()
 
-    console.log(JSON.stringify(data))
-
-    if (
-      !data.id ||
-      !data.historialActualizaciones?.idUsuario ||
-      !data.historialActualizaciones?.descripción
-    ) {
+    if (!data.id) {
       return new Response(
-        JSON.stringify({ error: "Datos incompletos para la actualización" }),
+        JSON.stringify({ error: "Datos incompletos para eliminar egresado" }),
         {
           status: 400,
         }
       )
     }
 
-    const response = await fetch("http://localhost:8080/egresado/actualizar", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(data),
-    })
+    console.log(data)
+
+    const response = await fetch(
+      `http://localhost:8080/egresado/eliminar/${data.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
 
     if (!response.ok) {
       const errorText = await response.text()
       return new Response(
-        JSON.stringify({ error: errorText || "Error al actualizar egresado" }),
+        JSON.stringify({ error: errorText || "Error al ELIMINAR egresado" }),
         {
           status: response.status,
         }
       )
     }
 
-    const updated = await response.json()
-    return new Response(JSON.stringify(updated), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    return new Response()
   } catch (error) {
     console.error("Error en la actualización:", error)
     return new Response(

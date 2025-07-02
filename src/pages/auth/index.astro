@@ -1,0 +1,67 @@
+---
+import Layout from "../../layouts/Layout.astro"
+import logo from "../../assets/logo.svg"
+import User from "../../assets/users.svg"
+import Graduate from "../../assets/graduate.svg"
+import LayoutAuth from "../../layouts/LayoutAuth.astro"
+---
+
+<LayoutAuth title="Ingresa al sistema">
+  <div class="flex flex-col items-center justify-center min-h-dvh gap-8">
+    <header>
+      <img
+        src={logo.src}
+        alt="Logotipo de UTP+trace"
+        class="w-auto mx-auto mb-1 h-10"
+        transition:name="logo-utp-trace"
+      />
+      <p>Selecciona tu tipo de acceso para continuar</p>
+    </header>
+    <main class="flex gap-10">
+      <article
+        class="bg-white/60 backdrop-blur-lg border-t-4 rounded-4xl border border-red-500 max-w-xs py-4 px-6"
+      >
+        <User class="text-red-500 size-14 mx-auto" />
+        <h2 class="text-center text-lg uppercase mb-1.5 font-bold text-red-500">
+          Administrador
+        </h2>
+        <p class="text-sm text-center text-neutral-800 mb-4">
+          Acceso completo al sistema para gestionar egresados, generar reportes
+          y administrar la plataforma.
+        </p>
+        <ul class="text-sm list-disc mb-3 w-fit mx-auto list-inside">
+          <li>Gestión de usuarios</li>
+          <li>Reportes y estadísticas</li>
+          <li>Configuración del sistema</li>
+        </ul>
+        <a
+          class="bg-red-500 rounded-lg text-white py-2 px-3 block w-fit mx-auto"
+          href="/auth/admin">Iniciar sesion</a
+        >
+      </article>
+      <article
+        class="bg-white/60 backdrop-blur-lg border-t-4 rounded-4xl border border-blue-500 max-w-xs py-4 px-6"
+      >
+        <Graduate class="text-blue-500 size-14 mx-auto" />
+        <h2
+          class="text-center text-lg uppercase mb-1.5 font-bold text-blue-500"
+        >
+          Egresado
+        </h2>
+        <p class="text-sm text-center text-neutral-800 mb-4">
+          Actualiza tu información académica y laboral, mantén tu perfil
+          profesional al día.
+        </p>
+        <ul class="text-sm list-disc mb-3 w-fit mx-auto list-inside">
+          <li>Actualizar datos personales</li>
+          <li>Información laboral</li>
+          <li>Historial académico</li>
+        </ul>
+        <a
+          class="bg-blue-500 rounded-lg text-white py-2 px-3 block w-fit mx-auto"
+          href="/auth/graduate">Iniciar sesion</a
+        >
+      </article>
+    </main>
+  </div>
+</LayoutAuth>

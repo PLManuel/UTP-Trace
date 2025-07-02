@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro"
 
-export const GET: APIRoute = async ({ cookies, url }) => {
+export const GET: APIRoute = async ({ cookies }) => {
   const token = cookies.get("authToken")?.value
 
   if (!token) {
@@ -9,23 +9,9 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     })
   }
 
-  const id = new URL(url).searchParams.get("id")
-
-  if (!id) {
-    return new Response(
-      JSON.stringify({ error: "ID de egresado no especificado" }),
-      {
-        status: 400,
-      }
-    )
-  }
-
-  console.log(`http://localhost:8080/egresado/obtener/${id}`)
-  console.log(token)
-
   try {
     const response = await fetch(
-      `http://localhost:8080/egresado/obtener/${id}`,
+      "http://localhost:8080/usuario/obtener/todos",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -36,7 +22,7 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     if (!response.ok) {
       const errorText = await response.text()
       return new Response(
-        JSON.stringify({ error: errorText || "Error al obtener egresado" }),
+        JSON.stringify({ error: errorText || "Error al obtener usuarios" }),
         {
           status: response.status,
         }
@@ -44,6 +30,8 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     }
 
     const data = await response.json()
+
+    console.log(JSON.stringify(data))
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
@@ -51,7 +39,6 @@ export const GET: APIRoute = async ({ cookies, url }) => {
       },
     })
   } catch (error) {
-    console.error("Error al recuperar egresado:", error)
     return new Response(
       JSON.stringify({ error: "Error interno del servidor" }),
       {

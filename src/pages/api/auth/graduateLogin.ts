@@ -4,6 +4,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const data = await request.json()
 
+    console.log(data)
+
     if (!data.correo || !data.contraseña) {
       return new Response(JSON.stringify({ error: "Campos incompletos" }), {
         status: 400,
@@ -11,17 +13,19 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     const payload = {
-      email: data.correo.trim(),
+      email: data.correo,
       contraseña: data.contraseña,
     }
 
-    const response = await fetch("http://localhost:8080/usuario/login", {
+    const response = await fetch("http://localhost:8080/egresado/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     })
 
     const responseData = await response.json()
+
+    console.log(JSON.stringify(payload))
 
     if (!response.ok) {
       return new Response(
@@ -32,7 +36,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       )
     }
 
-    cookies.set("authToken", responseData.token.token, {
+    cookies.set("authToken", responseData.token, {
       path: "/",
       httpOnly: true,
       secure: !import.meta.env.DEV,
@@ -44,11 +48,12 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       "userInfo",
       encodeURIComponent(
         JSON.stringify({
-          nombre: responseData.nombre,
-          apellido: responseData.apellido,
-          correo: responseData.email,
-          telefono: responseData.telefono,
-          rol: responseData.rol,
+          id: responseData.egresado.id,
+          nombre: responseData.egresado.nombre,
+          apellido: responseData.egresado.apellido,
+          correo: responseData.egresado.email,
+          telefono: responseData.egresado.telefono,
+          rol: "EGRESADO",
         })
       ),
       {
@@ -60,12 +65,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     )
 
-    let redirectTo = "/resources"
-    if (responseData.rol === "ADMINISTRADOR") {
-      redirectTo = "/dashboard"
-    }
-
-    return new Response(JSON.stringify({ redirectTo }), {
+    return new Response(JSON.stringify({ redirectTo : "/dashboard" }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",

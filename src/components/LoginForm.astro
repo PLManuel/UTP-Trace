@@ -1,4 +1,12 @@
-<form id="loginForm" class="mt-4 grid grid-cols-1 gap-5">
+---
+interface Props {
+  userType: "ADMINISTRATOR" | "GRADUATE"
+}
+
+const { userType } = Astro.props
+---
+
+<form id="loginForm" data-user-type={userType} class="grid grid-cols-1 gap-5">
   <fieldset>
     <label for="correo">Correo</label>
     <input
@@ -22,7 +30,7 @@
 
   <button
     type="submit"
-    class="bg-violet-700 hover:bg-violet-900 transition duration-300 mt-4 text-white rounded-lg mx-5 py-2 block cursor-pointer"
+    class=`${userType === "ADMINISTRATOR" ? "bg-red-500 hover:bg-red-60" : "bg-blue-600 hover:bg-blue-700"} w-fit transition duration-300 text-white rounded-lg py-2 px-3 block cursor-pointer mx-auto`
   >
     Iniciar Sesión
   </button>
@@ -62,7 +70,12 @@
       submitButton.textContent = "Iniciando sesión..."
 
       try {
-        const response = await fetch("/api/auth/login", {
+        const endpoint =
+          loginForm.dataset.userType === "GRADUATE"
+            ? "/api/auth/graduateLogin"
+            : "/api/auth/adminLogin"
+
+        const response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ correo, contraseña }),

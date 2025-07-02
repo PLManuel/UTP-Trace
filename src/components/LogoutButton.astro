@@ -1,42 +1,199 @@
-<button
-  id="logoutBtn"
-  class="w-full bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 flex items-center justify-center"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    class="h-5 w-5 mr-2 flex-shrink-0"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
+<div class="logout-container">
+  <button
+    id="logoutBtn"
+    class="group w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-3 rounded-xl font-medium transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-red-500/25 transform focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 relative overflow-hidden"
   >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-    ></path>
-  </svg>
-  Cerrar sesión
-</button>
+    <div
+      class="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"
+    >
+    </div>
+    <div class="flex items-center justify-center relative z-10">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="h-5 w-5 mr-2 flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+        ></path>
+      </svg>
+      <span class="transition-all duration-200 group-hover:tracking-wide"
+        >Cerrar sesión</span
+      >
+    </div>
+  </button>
+  <dialog
+    id="logoutDialog"
+    class="backdrop:bg-black/50 backdrop:backdrop-blur-sm m-auto bg-transparent p-0 max-w-md w-full rounded-2xl shadow-2xl open:animate-in open:fade-in open:zoom-in-95 open:duration-300"
+  >
+    <div class="bg-white rounded-2xl overflow-hidden">
+      <div class="p-6 border-b border-gray-100">
+        <div class="flex items-center space-x-3">
+          <div
+            class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 text-red-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
+              ></path>
+            </svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-gray-900">
+              Confirmar cierre de sesión
+            </h3>
+            <p class="text-sm text-gray-500">
+              Esta acción cerrará tu sesión actual
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="p-6">
+        <p class="text-gray-600 mb-6">
+          ¿Estás seguro de que deseas cerrar sesión? Tendrás que volver a
+          iniciar sesión para acceder al sistema.
+        </p>
+        <div class="flex space-x-3">
+          <button
+            id="cancelBtn"
+            class="flex-1 px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+          >
+            Cancelar
+          </button>
+          <button
+            id="confirmBtn"
+            class="flex-1 px-4 py-2.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-medium rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span id="confirmText">Cerrar sesión</span>
+            <svg
+              id="confirmSpinner"
+              class="hidden animate-spin h-4 w-4 mx-auto"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                class="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                stroke-width="4"></circle>
+              <path
+                class="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+</div>
+
+<style>
+  @keyframes pulse-red {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    50% {
+      box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+  }
+
+  .logout-container:hover #logoutBtn {
+    animation: pulse-red 2s infinite;
+  }
+
+  @supports (animation-timeline: view()) {
+    dialog {
+      animation: fade-in 0.3s ease-out;
+    }
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+</style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
-    const logoutBtn = document.getElementById("logoutBtn")
-    if (!logoutBtn) return
-    logoutBtn.addEventListener("click", async () => {
+    const logoutBtn = document.getElementById("logoutBtn") as HTMLButtonElement
+    const dialog = document.getElementById("logoutDialog") as HTMLDialogElement
+    const cancelBtn = document.getElementById("cancelBtn") as HTMLButtonElement
+    const confirmBtn = document.getElementById(
+      "confirmBtn"
+    ) as HTMLButtonElement
+    const confirmText = document.getElementById("confirmText") as HTMLElement
+    const confirmSpinner = document.getElementById(
+      "confirmSpinner"
+    ) as HTMLElement
+
+    if (!logoutBtn || !dialog || !cancelBtn || !confirmBtn) return
+
+    logoutBtn.addEventListener("click", () => dialog.showModal())
+    cancelBtn.addEventListener("click", () => dialog.close())
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close()
+    })
+
+    confirmBtn.addEventListener("click", async () => {
+      confirmText.classList.add("hidden")
+      confirmSpinner.classList.remove("hidden")
+      confirmBtn.disabled = true
+      cancelBtn.disabled = true
+
       try {
         const res = await fetch("/api/auth/logout", {
           method: "POST",
         })
 
         if (res.ok) {
-          window.location.href = "/login"
+          confirmText.textContent = "¡Hasta luego!"
+          confirmText.classList.remove("hidden")
+          confirmSpinner.classList.add("hidden")
+
+          setTimeout(() => {
+            window.location.href = "/auth"
+          }, 1000)
         } else {
-          alert("Error al cerrar sesión")
+          throw new Error("Error al cerrar sesión")
         }
       } catch (err) {
         console.error("Logout error:", err)
-        alert("Error inesperado al cerrar sesión")
+
+        confirmText.textContent = "Error"
+        confirmText.classList.remove("hidden")
+        confirmSpinner.classList.add("hidden")
+
+        setTimeout(() => {
+          confirmText.textContent = "Cerrar sesión"
+          confirmBtn.disabled = false
+          cancelBtn.disabled = false
+        }, 2000)
       }
     })
   })
