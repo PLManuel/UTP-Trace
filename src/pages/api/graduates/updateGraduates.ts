@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const data = await request.json()
 
-    console.log(JSON.stringify(data))
+    console.log(data)
 
     if (
       !data.id ||

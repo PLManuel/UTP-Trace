@@ -30,8 +30,6 @@ export const GET: APIRoute = async ({ cookies }) => {
     }
 
     const data = await response.json()
-
-    console.log(JSON.stringify(data))
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {

@@ -20,9 +20,6 @@ export const GET: APIRoute = async ({ cookies, url }) => {
     )
   }
 
-  console.log(`http://localhost:8080/egresado/obtener/${id}`)
-  console.log(token)
-
   try {
     const response = await fetch(
       `http://localhost:8080/egresado/obtener/${id}`,

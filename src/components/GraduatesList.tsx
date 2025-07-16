@@ -10,6 +10,10 @@ interface ExperienciaLaboral {
   cargo: string
   fechaIngreso: string
   fechaSalida: string | null
+  numerocontacto?: number
+  numeroDeEmpresa?: number
+  paginaWebEmpresa?: string
+  direccion?: string
 }
 
 interface Egresado {
@@ -18,6 +22,9 @@ interface Egresado {
   apellido: string
   email: string
   carrera: string
+  universidad: string
+  facultad: string
+  especialidad: string
   fechaNacimiento: string
   fechaIngreso: string
   fechaEgreso: string
@@ -319,7 +326,7 @@ export default function GraduatesList() {
                       Acciones
                     </button>
                     <div className="absolute right-0 mt-2 overflow-hidden bg-white rounded-md shadow-lg border border-gray-200 hidden flex-col group-focus-within:flex z-50 w-fit">
-                      <UpdateGraduates idGraduate={egresado.id}/>
+                      <UpdateGraduates idGraduate={egresado.id} />
                       <DeleteGraduateButton
                         idGraduate={egresado.id}
                         graduateName={egresado.nombre}
@@ -396,6 +403,71 @@ export default function GraduatesList() {
                       Egreso:{" "}
                       <span className="font-medium text-gray-900">
                         {formatDate(egresado.fechaEgreso)}
+                      </span>
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <svg
+                      className="w-4 h-4 text-indigo-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9.75 17l-3-3 3-3M14.25 7l3 3-3 3"
+                      />
+                    </svg>
+                    <span className="text-gray-600">
+                      Universidad:{" "}
+                      <span className="font-medium text-gray-900">
+                        {egresado.universidad}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <svg
+                      className="w-4 h-4 text-indigo-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M16 12H8m0 0l4-4m-4 4l4 4"
+                      />
+                    </svg>
+                    <span className="text-gray-600">
+                      Facultad:{" "}
+                      <span className="font-medium text-gray-900">
+                        {egresado.facultad}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <svg
+                      className="w-4 h-4 text-indigo-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 6h16M4 10h16M4 14h16"
+                      />
+                    </svg>
+                    <span className="text-gray-600">
+                      Especialidad:{" "}
+                      <span className="font-medium text-gray-900">
+                        {egresado.especialidad}
                       </span>
                     </span>
                   </div>
@@ -484,6 +556,48 @@ export default function GraduatesList() {
                                 : "Actual"}
                             </span>
                           </div>
+                          {exp.numerocontacto && (
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium text-gray-700">
+                                Contacto personal:
+                              </span>
+                              <span>{exp.numerocontacto}</span>
+                            </div>
+                          )}
+
+                          {exp.numeroDeEmpresa && (
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium text-gray-700">
+                                Teléfono empresa:
+                              </span>
+                              <span>{exp.numeroDeEmpresa}</span>
+                            </div>
+                          )}
+
+                          {exp.paginaWebEmpresa && (
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium text-gray-700">
+                                Web:
+                              </span>
+                              <a
+                                href={exp.paginaWebEmpresa}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-blue-600 underline"
+                              >
+                                {exp.paginaWebEmpresa}
+                              </a>
+                            </div>
+                          )}
+
+                          {exp.direccion && (
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium text-gray-700">
+                                Dirección:
+                              </span>
+                              <span>{exp.direccion}</span>
+                            </div>
+                          )}
                         </div>
                       </div>
                     ))}

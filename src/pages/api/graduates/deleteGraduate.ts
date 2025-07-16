@@ -21,8 +21,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       )
     }
 
-    console.log(data)
-
     const response = await fetch(
       `http://localhost:8080/egresado/eliminar/${data.id}`,
       {

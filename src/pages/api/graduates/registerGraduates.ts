@@ -28,6 +28,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         fechaEgreso: data.fechaEgreso,
         ponderado: data.ponderado,
         experienciaLaboralDTO: data.experienciaLaboralDTO,
+        universidad: data.universidad,
+        facultad: data.facultad,
+        especialidad: data.especialidad,
       }),
     })
 
@@ -39,6 +42,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     }
 
     const responseData = await response.json()
+    console.log("Registro exitoso:", responseData)
     return new Response(JSON.stringify(responseData), {
       status: 201,
       headers: {

@@ -25,8 +25,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     const responseData = await response.json()
 
-    console.log(responseData)
-
     if (!response.ok) {
       return new Response(
         JSON.stringify({
@@ -66,7 +64,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     let redirectTo = "/resources"
     if (responseData.rol === "ADMINISTRADOR") {
-      redirectTo = "/dashboard"
+      redirectTo = "/dashboard/usuarios"
     }
 
     return new Response(JSON.stringify({ redirectTo }), {

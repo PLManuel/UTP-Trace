@@ -6,6 +6,10 @@ interface ExperienciaLaboral {
   cargo: string
   fechaIngreso: string
   fechaSalida: string | null
+  numerocontacto?: number
+  numeroDeEmpresa?: number
+  paginaWebEmpresa?: string
+  direccion?: string
 }
 
 interface GraduateData {
@@ -14,6 +18,9 @@ interface GraduateData {
   apellido: string
   email: string
   carrera: string
+  universidad: string
+  facultad: string
+  especialidad: string
   contraseña: string
   fechaNacimiento: string
   fechaIngreso: string
@@ -84,6 +91,10 @@ export default function GraduateConfigForm({
             cargo: exp.cargo,
             fechaIngreso: exp.fechaIngreso,
             fechaSalida: exp.fechaSalida,
+            numerocontacto: exp.numerocontacto,
+            numeroDeEmpresa: exp.numeroDeEmpresa,
+            paginaWebEmpresa: exp.paginaWebEmpresa,
+            direccion: exp.direccion,
           }))
         : undefined
 
@@ -96,6 +107,9 @@ export default function GraduateConfigForm({
       apellido: form.apellido,
       email: form.email,
       carrera: form.carrera,
+      universidad: form.universidad,
+      facultad: form.facultad,
+      especialidad: form.especialidad,
       contraseña: form.contraseña,
       fechaNacimiento: toISOStringWithTimezone(form.fechaNacimiento!),
       fechaIngreso: toISOStringWithTimezone(form.fechaIngreso!),
@@ -349,6 +363,45 @@ export default function GraduateConfigForm({
                 placeholder="0.0"
               />
             </fieldset>
+
+            <fieldset className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">
+                Universidad
+              </label>
+              <input
+                required
+                value={form.universidad || ""}
+                onChange={(e) => handleChange("universidad", e.target.value)}
+                placeholder="Nombre de la universidad"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+              />
+            </fieldset>
+
+            <fieldset className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">
+                Facultad
+              </label>
+              <input
+                required
+                value={form.facultad || ""}
+                onChange={(e) => handleChange("facultad", e.target.value)}
+                placeholder="Nombre de la facultad"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+              />
+            </fieldset>
+
+            <fieldset className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">
+                Especialidad
+              </label>
+              <input
+                required
+                value={form.especialidad || ""}
+                onChange={(e) => handleChange("especialidad", e.target.value)}
+                placeholder="Nombre de la especialidad"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-3 focus:ring-green-500/50 focus:border-green-500 transition-all duration-200 bg-white shadow-sm"
+              />
+            </fieldset>
           </div>
         </div>
 
@@ -494,6 +547,74 @@ export default function GraduateConfigForm({
                       onChange={(e) =>
                         handleExpChange(index, "fechaSalida", e.target.value)
                       }
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200 bg-white text-sm"
+                    />
+                  </fieldset>
+
+                  <fieldset className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">
+                      Número de contacto personal
+                    </label>
+                    <input
+                      type="number"
+                      value={exp.numerocontacto || ""}
+                      onChange={(e) =>
+                        handleExpChange(index, "numerocontacto", e.target.value)
+                      }
+                      placeholder="Ej: 923456789"
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200 bg-white text-sm"
+                    />
+                  </fieldset>
+
+                  <fieldset className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">
+                      Número de la empresa
+                    </label>
+                    <input
+                      type="number"
+                      value={exp.numeroDeEmpresa || ""}
+                      onChange={(e) =>
+                        handleExpChange(
+                          index,
+                          "numeroDeEmpresa",
+                          e.target.value
+                        )
+                      }
+                      placeholder="Ej: 998877665"
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200 bg-white text-sm"
+                    />
+                  </fieldset>
+
+                  <fieldset className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">
+                      Página web de la empresa
+                    </label>
+                    <input
+                      type="url"
+                      value={exp.paginaWebEmpresa || ""}
+                      onChange={(e) =>
+                        handleExpChange(
+                          index,
+                          "paginaWebEmpresa",
+                          e.target.value
+                        )
+                      }
+                      placeholder="https://empresa.com"
+                      className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200 bg-white text-sm"
+                    />
+                  </fieldset>
+
+                  <fieldset className="space-y-2">
+                    <label className="block text-xs font-medium text-gray-600">
+                      Dirección
+                    </label>
+                    <input
+                      type="text"
+                      value={exp.direccion || ""}
+                      onChange={(e) =>
+                        handleExpChange(index, "direccion", e.target.value)
+                      }
+                      placeholder="Dirección de la empresa"
                       className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all duration-200 bg-white text-sm"
                     />
                   </fieldset>

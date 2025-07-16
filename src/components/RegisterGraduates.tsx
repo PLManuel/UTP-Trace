@@ -5,6 +5,10 @@ interface ExperienciaLaboral {
   cargo: string
   fechaIngreso: string
   fechaSalida: string | null
+  numerocontacto?: number
+  numeroDeEmpresa?: number
+  paginaWebEmpresa?: string
+  direccion?: string
 }
 
 interface FormData {
@@ -13,6 +17,9 @@ interface FormData {
   email: string
   password: string
   carrera: string
+  universidad: string
+  facultad: string
+  especialidad: string
   fechaNacimiento: string
   fechaIngreso: string
   fechaEgreso: string
@@ -36,6 +43,9 @@ export default function RegisterGraduates() {
     email: "",
     password: "",
     carrera: "",
+    universidad: "",
+    facultad: "",
+    especialidad: "",
     fechaNacimiento: "",
     fechaIngreso: "",
     fechaEgreso: "",
@@ -56,7 +66,16 @@ export default function RegisterGraduates() {
       ...prev,
       experienciaLaboralDTO: [
         ...prev.experienciaLaboralDTO,
-        { empresa: "", cargo: "", fechaIngreso: "", fechaSalida: null },
+        {
+          empresa: "",
+          cargo: "",
+          fechaIngreso: "",
+          fechaSalida: null,
+          numerocontacto: undefined,
+          numeroDeEmpresa: undefined,
+          paginaWebEmpresa: "",
+          direccion: "",
+        },
       ],
     }))
   }
@@ -64,15 +83,21 @@ export default function RegisterGraduates() {
   const removeExperiencia = (index: number) => {
     setFormData((prev) => ({
       ...prev,
-      experienciaLaboralDTO: prev.experienciaLaboralDTO.filter((_, i) => i !== index),
+      experienciaLaboralDTO: prev.experienciaLaboralDTO.filter(
+        (_, i) => i !== index
+      ),
     }))
   }
 
-  const updateExperiencia = (index: number, field: keyof ExperienciaLaboral, value: string | null) => {
+  const updateExperiencia = (
+    index: number,
+    field: keyof ExperienciaLaboral,
+    value: string | null
+  ) => {
     setFormData((prev) => ({
       ...prev,
       experienciaLaboralDTO: prev.experienciaLaboralDTO.map((exp, i) =>
-        i === index ? { ...exp, [field]: value || null } : exp,
+        i === index ? { ...exp, [field]: value || null } : exp
       ),
     }))
   }
@@ -82,30 +107,47 @@ export default function RegisterGraduates() {
 
     // Validaciones básicas
     if (!formData.nombre.trim()) newErrors.nombre = "El nombre es obligatorio"
-    if (!formData.apellido.trim()) newErrors.apellido = "El apellido es obligatorio"
+    if (!formData.apellido.trim())
+      newErrors.apellido = "El apellido es obligatorio"
     if (!formData.email.trim()) newErrors.email = "El email es obligatorio"
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email inválido"
-    if (!formData.password.trim()) newErrors.password = "La contraseña es obligatoria"
-    else if (formData.password.length < 6) newErrors.password = "La contraseña debe tener al menos 6 caracteres"
-    if (!formData.carrera.trim()) newErrors.carrera = "La carrera es obligatoria"
-    if (!formData.fechaNacimiento) newErrors.fechaNacimiento = "La fecha de nacimiento es obligatoria"
-    if (!formData.fechaIngreso) newErrors.fechaIngreso = "La fecha de ingreso es obligatoria"
-    if (!formData.fechaEgreso) newErrors.fechaEgreso = "La fecha de egreso es obligatoria"
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Email inválido"
+    if (!formData.password.trim())
+      newErrors.password = "La contraseña es obligatoria"
+    else if (formData.password.length < 6)
+      newErrors.password = "La contraseña debe tener al menos 6 caracteres"
+    if (!formData.carrera.trim())
+      newErrors.carrera = "La carrera es obligatoria"
+    if (!formData.fechaNacimiento)
+      newErrors.fechaNacimiento = "La fecha de nacimiento es obligatoria"
+    if (!formData.fechaIngreso)
+      newErrors.fechaIngreso = "La fecha de ingreso es obligatoria"
+    if (!formData.fechaEgreso)
+      newErrors.fechaEgreso = "La fecha de egreso es obligatoria"
     if (formData.ponderado <= 0 || formData.ponderado > 20) {
       newErrors.ponderado = "El ponderado debe estar entre 0.1 y 20"
     }
 
+    if (!formData.universidad.trim())
+      newErrors.universidad = "La universidad es obligatoria"
+    if (!formData.facultad.trim())
+      newErrors.facultad = "La facultad es obligatoria"
+    if (!formData.especialidad.trim())
+      newErrors.especialidad = "La especialidad es obligatoria"
+
     // Validar fechas lógicas
     if (formData.fechaIngreso && formData.fechaEgreso) {
       if (new Date(formData.fechaIngreso) >= new Date(formData.fechaEgreso)) {
-        newErrors.fechaEgreso = "La fecha de egreso debe ser posterior al ingreso"
+        newErrors.fechaEgreso =
+          "La fecha de egreso debe ser posterior al ingreso"
       }
     }
 
     // Validar experiencias laborales
     formData.experienciaLaboralDTO.forEach((exp, index) => {
       if (exp.empresa && (!exp.cargo || !exp.fechaIngreso)) {
-        newErrors[`experiencia_${index}`] = "Complete todos los campos de la experiencia"
+        newErrors[`experiencia_${index}`] =
+          "Complete todos los campos de la experiencia"
       }
     })
 
@@ -152,6 +194,9 @@ export default function RegisterGraduates() {
       email: "",
       password: "",
       carrera: "",
+      especialidad: "",
+      universidad: "",
+      facultad: "",
       fechaNacimiento: "",
       fechaIngreso: "",
       fechaEgreso: "",
@@ -194,11 +239,16 @@ export default function RegisterGraduates() {
       }
     } else if (currentStep === 2) {
       // Validar solo los campos del paso 2
-      const step2Fields = ["fechaNacimiento", "fechaIngreso", "fechaEgreso", "ponderado"]
+      const step2Fields = [
+        "fechaNacimiento",
+        "fechaIngreso",
+        "fechaEgreso",
+        "ponderado",
+      ]
       const hasStep2Errors = step2Fields.some((field) => {
         const value = formData[field as keyof FormData]
         if (field === "ponderado") {
-          return value <= 0 || value > 20
+          return typeof value !== "number" || value <= 0 || value > 20
         }
         return !value
       })
@@ -235,7 +285,12 @@ export default function RegisterGraduates() {
           stroke="currentColor"
           viewBox="0 0 24 24"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+          />
         </svg>
         Nuevo Egresado
       </button>
@@ -250,7 +305,12 @@ export default function RegisterGraduates() {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -260,8 +320,12 @@ export default function RegisterGraduates() {
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">Registrar Nuevo Egresado</h2>
-                  <p className="text-sm text-gray-600">Complete la información del egresado</p>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    Registrar Nuevo Egresado
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    Complete la información del egresado
+                  </p>
                 </div>
               </div>
               <button
@@ -269,45 +333,87 @@ export default function RegisterGraduates() {
                 onClick={closeModal}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
               >
-                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             {/* Progress Steps */}
             <div className="flex items-center mt-4 space-x-4">
-              <div className={`flex items-center ${currentStep >= 1 ? "text-blue-600" : "text-gray-400"}`}>
+              <div
+                className={`flex items-center ${
+                  currentStep >= 1 ? "text-blue-600" : "text-gray-400"
+                }`}
+              >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    currentStep >= 1 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-500"
+                    currentStep >= 1
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   1
                 </div>
-                <span className="ml-2 text-sm font-medium">Información Personal</span>
+                <span className="ml-2 text-sm font-medium">
+                  Información Personal
+                </span>
               </div>
-              <div className={`w-8 h-0.5 ${currentStep >= 2 ? "bg-blue-600" : "bg-gray-200"}`}></div>
-              <div className={`flex items-center ${currentStep >= 2 ? "text-blue-600" : "text-gray-400"}`}>
+              <div
+                className={`w-8 h-0.5 ${
+                  currentStep >= 2 ? "bg-blue-600" : "bg-gray-200"
+                }`}
+              ></div>
+              <div
+                className={`flex items-center ${
+                  currentStep >= 2 ? "text-blue-600" : "text-gray-400"
+                }`}
+              >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    currentStep >= 2 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-500"
+                    currentStep >= 2
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   2
                 </div>
-                <span className="ml-2 text-sm font-medium">Fechas y Académico</span>
+                <span className="ml-2 text-sm font-medium">
+                  Fechas y Académico
+                </span>
               </div>
-              <div className={`w-8 h-0.5 ${currentStep >= 3 ? "bg-blue-600" : "bg-gray-200"}`}></div>
-              <div className={`flex items-center ${currentStep >= 3 ? "text-blue-600" : "text-gray-400"}`}>
+              <div
+                className={`w-8 h-0.5 ${
+                  currentStep >= 3 ? "bg-blue-600" : "bg-gray-200"
+                }`}
+              ></div>
+              <div
+                className={`flex items-center ${
+                  currentStep >= 3 ? "text-blue-600" : "text-gray-400"
+                }`}
+              >
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
-                    currentStep >= 3 ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-500"
+                    currentStep >= 3
+                      ? "bg-blue-600 text-white"
+                      : "bg-gray-200 text-gray-500"
                   }`}
                 >
                   3
                 </div>
-                <span className="ml-2 text-sm font-medium">Experiencia Laboral</span>
+                <span className="ml-2 text-sm font-medium">
+                  Experiencia Laboral
+                </span>
               </div>
             </div>
           </div>
@@ -319,7 +425,12 @@ export default function RegisterGraduates() {
               {currentStep === 1 && (
                 <div className="space-y-6">
                   <div className="flex items-center space-x-2 mb-4">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-5 h-5 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -327,16 +438,22 @@ export default function RegisterGraduates() {
                         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                       />
                     </svg>
-                    <h3 className="text-lg font-semibold text-gray-900">Información Personal</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Información Personal
+                    </h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Nombre *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Nombre *
+                      </label>
                       <input
                         type="text"
                         value={formData.nombre}
-                        onChange={(e) => handleInputChange("nombre", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("nombre", e.target.value)
+                        }
                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                           errors.nombre
                             ? "border-red-300 focus:ring-red-500 focus:border-red-500"
@@ -344,15 +461,23 @@ export default function RegisterGraduates() {
                         }`}
                         placeholder="Ingrese el nombre"
                       />
-                      {errors.nombre && <p className="mt-1 text-sm text-red-600">{errors.nombre}</p>}
+                      {errors.nombre && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.nombre}
+                        </p>
+                      )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Apellido *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Apellido *
+                      </label>
                       <input
                         type="text"
                         value={formData.apellido}
-                        onChange={(e) => handleInputChange("apellido", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("apellido", e.target.value)
+                        }
                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                           errors.apellido
                             ? "border-red-300 focus:ring-red-500 focus:border-red-500"
@@ -360,16 +485,24 @@ export default function RegisterGraduates() {
                         }`}
                         placeholder="Ingrese el apellido"
                       />
-                      {errors.apellido && <p className="mt-1 text-sm text-red-600">{errors.apellido}</p>}
+                      {errors.apellido && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.apellido}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Email *
+                    </label>
                     <input
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("email", e.target.value)
+                      }
                       className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                         errors.email
                           ? "border-red-300 focus:ring-red-500 focus:border-red-500"
@@ -377,16 +510,24 @@ export default function RegisterGraduates() {
                       }`}
                       placeholder="ejemplo@correo.com"
                     />
-                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                    {errors.email && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.email}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Contraseña *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Contraseña *
+                    </label>
                     <div className="relative">
                       <input
                         type={showPassword ? "text" : "password"}
                         value={formData.password}
-                        onChange={(e) => handleInputChange("password", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("password", e.target.value)
+                        }
                         className={`w-full px-4 py-3 pr-12 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                           errors.password
                             ? "border-red-300 focus:ring-red-500 focus:border-red-500"
@@ -400,7 +541,12 @@ export default function RegisterGraduates() {
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
                       >
                         {showPassword ? (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -409,7 +555,12 @@ export default function RegisterGraduates() {
                             />
                           </svg>
                         ) : (
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg
+                            className="w-5 h-5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
                             <path
                               strokeLinecap="round"
                               strokeLinejoin="round"
@@ -426,15 +577,23 @@ export default function RegisterGraduates() {
                         )}
                       </button>
                     </div>
-                    {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+                    {errors.password && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.password}
+                      </p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Carrera *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Carrera *
+                    </label>
                     <input
                       type="text"
                       value={formData.carrera}
-                      onChange={(e) => handleInputChange("carrera", e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("carrera", e.target.value)
+                      }
                       className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                         errors.carrera
                           ? "border-red-300 focus:ring-red-500 focus:border-red-500"
@@ -442,7 +601,11 @@ export default function RegisterGraduates() {
                       }`}
                       placeholder="Ingrese la carrera"
                     />
-                    {errors.carrera && <p className="mt-1 text-sm text-red-600">{errors.carrera}</p>}
+                    {errors.carrera && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.carrera}
+                      </p>
+                    )}
                   </div>
                 </div>
               )}
@@ -451,7 +614,12 @@ export default function RegisterGraduates() {
               {currentStep === 2 && (
                 <div className="space-y-6">
                   <div className="flex items-center space-x-2 mb-4">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg
+                      className="w-5 h-5 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -459,65 +627,98 @@ export default function RegisterGraduates() {
                         d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                       />
                     </svg>
-                    <h3 className="text-lg font-semibold text-gray-900">Fechas y Información Académica</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      Fechas y Información Académica
+                    </h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Nacimiento *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Fecha de Nacimiento *
+                      </label>
                       <input
                         type="date"
                         value={formData.fechaNacimiento}
-                        onChange={(e) => handleInputChange("fechaNacimiento", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("fechaNacimiento", e.target.value)
+                        }
                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                           errors.fechaNacimiento
                             ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                             : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         }`}
                       />
-                      {errors.fechaNacimiento && <p className="mt-1 text-sm text-red-600">{errors.fechaNacimiento}</p>}
+                      {errors.fechaNacimiento && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.fechaNacimiento}
+                        </p>
+                      )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Ingreso *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Fecha de Ingreso *
+                      </label>
                       <input
                         type="date"
                         value={formData.fechaIngreso}
-                        onChange={(e) => handleInputChange("fechaIngreso", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("fechaIngreso", e.target.value)
+                        }
                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                           errors.fechaIngreso
                             ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                             : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         }`}
                       />
-                      {errors.fechaIngreso && <p className="mt-1 text-sm text-red-600">{errors.fechaIngreso}</p>}
+                      {errors.fechaIngreso && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.fechaIngreso}
+                        </p>
+                      )}
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Egreso *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Fecha de Egreso *
+                      </label>
                       <input
                         type="date"
                         value={formData.fechaEgreso}
-                        onChange={(e) => handleInputChange("fechaEgreso", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange("fechaEgreso", e.target.value)
+                        }
                         className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                           errors.fechaEgreso
                             ? "border-red-300 focus:ring-red-500 focus:border-red-500"
                             : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
                         }`}
                       />
-                      {errors.fechaEgreso && <p className="mt-1 text-sm text-red-600">{errors.fechaEgreso}</p>}
+                      {errors.fechaEgreso && (
+                        <p className="mt-1 text-sm text-red-600">
+                          {errors.fechaEgreso}
+                        </p>
+                      )}
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Ponderado (0.1 - 20.0) *</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Ponderado (0.1 - 20.0) *
+                    </label>
                     <input
                       type="number"
                       step="0.1"
                       min="0.1"
                       max="20"
                       value={formData.ponderado || ""}
-                      onChange={(e) => handleInputChange("ponderado", Number.parseFloat(e.target.value) || 0)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "ponderado",
+                          Number.parseFloat(e.target.value) || 0
+                        )
+                      }
                       className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200 ${
                         errors.ponderado
                           ? "border-red-300 focus:ring-red-500 focus:border-red-500"
@@ -525,7 +726,55 @@ export default function RegisterGraduates() {
                       }`}
                       placeholder="Ej: 16.5"
                     />
-                    {errors.ponderado && <p className="mt-1 text-sm text-red-600">{errors.ponderado}</p>}
+                    {errors.ponderado && (
+                      <p className="mt-1 text-sm text-red-600">
+                        {errors.ponderado}
+                      </p>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Universidad *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.universidad}
+                      onChange={(e) =>
+                        handleInputChange("universidad", e.target.value)
+                      }
+                      className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200"
+                      placeholder="Ingrese la universidad"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Facultad *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.facultad}
+                      onChange={(e) =>
+                        handleInputChange("facultad", e.target.value)
+                      }
+                      className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200"
+                      placeholder="Ingrese la facultad"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Especialidad *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.especialidad}
+                      onChange={(e) =>
+                        handleInputChange("especialidad", e.target.value)
+                      }
+                      className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-colors duration-200"
+                      placeholder="Ingrese la especialidad"
+                    />
                   </div>
                 </div>
               )}
@@ -535,7 +784,12 @@ export default function RegisterGraduates() {
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-5 h-5 text-blue-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -543,7 +797,9 @@ export default function RegisterGraduates() {
                           d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"
                         />
                       </svg>
-                      <h3 className="text-lg font-semibold text-gray-900">Experiencia Laboral</h3>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Experiencia Laboral
+                      </h3>
                       <span className="text-sm text-gray-500">(Opcional)</span>
                     </div>
                     <button
@@ -551,7 +807,12 @@ export default function RegisterGraduates() {
                       onClick={addExperiencia}
                       className="inline-flex items-center px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors duration-200"
                     >
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg
+                        className="w-4 h-4 mr-1"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
                         <path
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -578,13 +839,20 @@ export default function RegisterGraduates() {
                           d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 012 2v6a2 2 0 01-2 2H8a2 2 0 01-2-2V8a2 2 0 012-2V6"
                         />
                       </svg>
-                      <p className="text-gray-500 mb-4">No hay experiencias laborales agregadas</p>
+                      <p className="text-gray-500 mb-4">
+                        No hay experiencias laborales agregadas
+                      </p>
                       <button
                         type="button"
                         onClick={addExperiencia}
                         className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
                       >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg
+                          className="w-4 h-4 mr-2"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
                           <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
@@ -598,15 +866,25 @@ export default function RegisterGraduates() {
                   ) : (
                     <div className="space-y-4">
                       {formData.experienciaLaboralDTO.map((exp, index) => (
-                        <div key={index} className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                        <div
+                          key={index}
+                          className="bg-gray-50 border border-gray-200 rounded-xl p-6"
+                        >
                           <div className="flex items-center justify-between mb-4">
-                            <h4 className="text-lg font-medium text-gray-900">Experiencia {index + 1}</h4>
+                            <h4 className="text-lg font-medium text-gray-900">
+                              Experiencia {index + 1}
+                            </h4>
                             <button
                               type="button"
                               onClick={() => removeExperiencia(index)}
                               className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors duration-200"
                             >
-                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
                                 <path
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
@@ -619,33 +897,57 @@ export default function RegisterGraduates() {
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">Empresa</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Empresa
+                              </label>
                               <input
                                 type="text"
                                 value={exp.empresa}
-                                onChange={(e) => updateExperiencia(index, "empresa", e.target.value)}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "empresa",
+                                    e.target.value
+                                  )
+                                }
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                                 placeholder="Nombre de la empresa"
                               />
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">Cargo</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Cargo
+                              </label>
                               <input
                                 type="text"
                                 value={exp.cargo}
-                                onChange={(e) => updateExperiencia(index, "cargo", e.target.value)}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "cargo",
+                                    e.target.value
+                                  )
+                                }
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                                 placeholder="Cargo desempeñado"
                               />
                             </div>
 
                             <div>
-                              <label className="block text-sm font-medium text-gray-700 mb-2">Fecha de Ingreso</label>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Fecha de Ingreso
+                              </label>
                               <input
                                 type="date"
                                 value={exp.fechaIngreso}
-                                onChange={(e) => updateExperiencia(index, "fechaIngreso", e.target.value)}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "fechaIngreso",
+                                    e.target.value
+                                  )
+                                }
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                               />
                             </div>
@@ -653,19 +955,104 @@ export default function RegisterGraduates() {
                             <div>
                               <label className="block text-sm font-medium text-gray-700 mb-2">
                                 Fecha de Salida
-                                <span className="text-gray-500 text-xs ml-1">(Opcional si aún trabaja)</span>
+                                <span className="text-gray-500 text-xs ml-1">
+                                  (Opcional si aún trabaja)
+                                </span>
                               </label>
                               <input
                                 type="date"
                                 value={exp.fechaSalida || ""}
-                                onChange={(e) => updateExperiencia(index, "fechaSalida", e.target.value || null)}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "fechaSalida",
+                                    e.target.value || null
+                                  )
+                                }
                                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Número de contacto consultas
+                              </label>
+                              <input
+                                type="number"
+                                value={exp.numerocontacto || ""}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "numerocontacto",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Ej: 923456789"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Número de la empresa
+                              </label>
+                              <input
+                                type="number"
+                                value={exp.numeroDeEmpresa || ""}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "numeroDeEmpresa",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Ej: 998877665"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Página web de la empresa
+                              </label>
+                              <input
+                                type="url"
+                                value={exp.paginaWebEmpresa || ""}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "paginaWebEmpresa",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="https://empresa.com"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Dirección
+                              </label>
+                              <input
+                                type="text"
+                                value={exp.direccion || ""}
+                                onChange={(e) =>
+                                  updateExperiencia(
+                                    index,
+                                    "direccion",
+                                    e.target.value
+                                  )
+                                }
+                                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Dirección de la empresa"
                               />
                             </div>
                           </div>
 
                           {errors[`experiencia_${index}`] && (
-                            <p className="mt-2 text-sm text-red-600">{errors[`experiencia_${index}`]}</p>
+                            <p className="mt-2 text-sm text-red-600">
+                              {errors[`experiencia_${index}`]}
+                            </p>
                           )}
                         </div>
                       ))}
@@ -685,8 +1072,18 @@ export default function RegisterGraduates() {
                       onClick={prevStep}
                       className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors duration-200"
                     >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                      <svg
+                        className="w-4 h-4 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M15 19l-7-7 7-7"
+                        />
                       </svg>
                       Anterior
                     </button>
@@ -708,8 +1105,18 @@ export default function RegisterGraduates() {
                       className="inline-flex items-center px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl"
                     >
                       Siguiente
-                      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                      <svg
+                        className="w-4 h-4 ml-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M9 5l7 7-7 7"
+                        />
                       </svg>
                     </button>
                   ) : (
@@ -744,8 +1151,18 @@ export default function RegisterGraduates() {
                         </>
                       ) : (
                         <>
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M5 13l4 4L19 7"
+                            />
                           </svg>
                           Registrar Egresado
                         </>

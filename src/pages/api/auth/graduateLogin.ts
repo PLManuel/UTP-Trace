@@ -4,8 +4,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   try {
     const data = await request.json()
 
-    console.log(data)
-
     if (!data.correo || !data.contraseña) {
       return new Response(JSON.stringify({ error: "Campos incompletos" }), {
         status: 400,
@@ -24,8 +22,6 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     })
 
     const responseData = await response.json()
-
-    console.log(JSON.stringify(payload))
 
     if (!response.ok) {
       return new Response(
@@ -65,7 +61,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       }
     )
 
-    return new Response(JSON.stringify({ redirectTo : "/dashboard" }), {
+    return new Response(JSON.stringify({ redirectTo : "/dashboard/config" }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
